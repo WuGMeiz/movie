@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MovieHallMovieTime">
+
+	<resultMap type="com.dlszy.entity.MovieHallMovieTime" id="MovieHallMovieTimeResult">
+		<id column="m_m_id" jdbcType="INTEGER" property="m_m_id" />
+		<association property="movieHall" javaType="com.dlszy.entity.MovieHall">
+			<id column="hid" jdbcType="INTEGER" property="hid" />
+			<result column="hname" jdbcType="VARCHAR" property="hname" />
+			<result column="hnum" jdbcType="INTEGER" property="hnum" />
+			<result column="hstate" jdbcType="VARCHAR" property="hstate" />
+		</association>
+		<association property="movie" javaType="com.dlszy.entity.Movie">
+			<id column="mid" jdbcType="INTEGER" property="mid" />
+			<result column="mname" jdbcType="VARCHAR" property="mname" />
+			<result column="mpic" jdbcType="VARCHAR" property="mpic" />
+			<result column="mcountry" jdbcType="VARCHAR" property="mcountry" />
+			<result column="mauthor" jdbcType="VARCHAR" property="mauthor" />
+			<result column="mprice" jdbcType="DOUBLE" property="mprice" />
+			<result column="mactor" jdbcType="VARCHAR" property="mactor" />
+			<result column="mdate" jdbcType="DATE" property="mdate" />
+			<result column="mstate" jdbcType="VARCHAR" property="mstate" />
+		</association>
+		<association property="time" javaType="com.dlszy.entity.Time">
+		   <id column="tid" jdbcType="INTEGER" property="tid"/>
+           <result column="timespace" jdbcType="VARCHAR" property="timespace"/>
+		</association>
+	</resultMap>
+   <select id="findAll" resultMap="MovieHallMovieTimeResult">
+      select mmh.m_m_id,m.mname,mh.hname,m.mprice,t.timespace from t_movie m,t_moviehall mh,t_moviehall_movie mmh,t_time t
+      where mmh.mid=m.mid and mmh.hid=mh.hid and mmh.tid=t.tid order by m_m_id desc
+   </select>
+   <select id="count" resultType="INTEGER" parameterType="STRING">
+      select count(m_m_id) from t_moviehall_movie
+   </select>
+   <select id="findByPage" resultMap="MovieHallMovieTimeResult" parameterType="java.lang.reflect.Array">
+     select mmh.m_m_id,m.mname,mh.hname,m.mprice,t.timespace from t_movie m,t_moviehall mh,t_moviehall_movie mmh,t_time t
+      where mmh.mid=m.mid and mmh.hid=mh.hid and mmh.tid=t.tid order by m_m_id desc limit #{array[0]},#{array[1]};
+   </select>
+   <select id="findById" resultMap="MovieHallMovieTimeResult" parameterType="INTEGER">
+   	  select mmh.m_m_id,m.mname,mh.hname,m.mprice,t.timespace from t_movie m,t_moviehall mh,t_moviehall_movie mmh,t_time t
+      where mmh.mid=m.mid and mmh.hid=mh.hid and mmh.tid=t.tid and mmh.m_m_id=#{_parameter}
+   </select>
+   <delete id="deleteMsg" parameterType="INTEGER">
+   		delete from t_moviehall_movie where m_m_id=#{_parameter}
+   </delete>
+   <select id="findByName" resultMap="MovieHallMovieTimeResult" parameterType="STRING">
+   	  select mmh.m_m_id,m.mname,mh.hname,m.mprice,t.timespace from t_movie m,t_moviehall mh,t_moviehall_movie mmh,t_time t
+      where mmh.mid=m.mid and mmh.hid=mh.hid and mmh.tid=t.tid and m.mname=#{_parameter}
+   </select>
+    <select id="findByHall" resultMap="MovieHallMovieTimeResult" parameterType="STRING">
+   	  select mmh.m_m_id,m.mname,mh.hname,m.mprice,t.timespace from t_movie m,t_moviehall mh,t_moviehall_movie mmh,t_time t
+      where mmh.mid=m.mid and mmh.hid=mh.hid and mmh.tid=t.tid and mh.hname=#{_parameter}
+   </select>
+   <select id="findByNameAndHall" resultMap="MovieHallMovieTimeResult" parameterType="java.lang.reflect.Array">
+   	  select mmh.m_m_id,m.mname,mh.hname,m.mprice,t.timespace from t_movie m,t_moviehall mh,t_moviehall_movie mmh,t_time t
+      where mmh.mid=m.mid and mmh.hid=mh.hid and mmh.tid=t.tid and m.mname=#{array[0]} and mh.hname=#{array[1]}
+   </select>
+   <insert id="addMovieHallTime" parameterType="java.lang.reflect.Array">
+   	   insert into t_moviehall_movie values(null,#{array[0]},#{array[1]},#{array[2]})
+   </insert>
+   <update id="updateMsg" parameterType="java.lang.reflect.Array">
+   	   update t_moviehall_movie set mid=#{array[0]},hid=#{array[1]},tid=#{array[2]} where m_m_id=#{array[3]}
+   </update>
+   <select id="findallmovie_moviehall_time" resultType="com.dlszy.entity.Nothing">
+   		select m.mid,m.mname,h.hid,h.hname,t.tid,t.timespace,m.mprice from t_movie m,t_moviehall h,t_time t,t_moviehall_movie mm where m.mid=mm.mid and h.hid=mm.hid and t.tid=mm.tid;
+   </select>
+</mapper>

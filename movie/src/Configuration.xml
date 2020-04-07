@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <mappers>
+     <mapper resource="com/dlszy/entity/moviehall.xml"/>
+     <mapper resource="com/dlszy/entity/seat.xml"/>
+     <mapper resource="com/dlszy/entity/time.xml"/>
+      <mapper resource="com/dlszy/entity/time2.xml"/>
+     <mapper resource="com/dlszy/entity/movie.xml"/>
+     <mapper resource="com/dlszy/entity/moviehall_movie_time.xml"/>
+     <mapper resource="com/dlszy/entity/moviehallseat.xml"/>
+     <mapper resource="com/dlszy/entity/Limit.xml"/>
+     <mapper resource="com/dlszy/entity/Role.xml"/>
+     <mapper resource="com/dlszy/entity/User.xml"/>
+     <mapper resource="com/dlszy/entity/viper.xml"/>
+     <mapper resource="com/dlszy/entity/movietotal.xml"/>
+     <mapper resource="com/dlszy/entity/movietotal.xml"/>
+  </mappers>
+</configuration>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Role">
+  <resultMap type="com.dlszy.entity.Role" id="roleResult">
+    <id column="rid" jdbcType="INTEGER" property="rid"/>
+    <result column="rname" jdbcType="VARCHAR" property="rname"/>
+    <!--有多个权限-->
+    <collection property="limits" ofType="com.dlszy.entity.Limit">
+            <id property="lid" column="lid"/>
+            <result property="lname" column="lname"/>
+            <result property="url" column="url"/>
+    </collection>
+  </resultMap>
+  <select id="findByRid" resultMap="roleResult" parameterType="INTEGER">
+  		select r.rid,l.lid,r.rname,l.lname,l.url from t_role r,t_limit l,t_role_limit rl 
+  		where r.rid=rl.rid and l.lid=rl.lid and r.rid=#{_parameter}
+  </select>
+ <select id="roleList" resultMap="roleResult">
+        select r.rid,r.rname from t_role
+ </select>
+</mapper>

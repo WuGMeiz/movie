@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Movie">
+  <resultMap type="com.dlszy.entity.Movie" id="MovieResult">
+    <id column="mid" jdbcType="INTEGER" property="mid"/>
+    <result column="mname" jdbcType="VARCHAR" property="mname"/>
+    <result column="mpic" jdbcType="VARCHAR" property="mpic"/>
+    <result column="mcountry" jdbcType="VARCHAR" property="mcountry"/>
+    <result column="mauthor" jdbcType="VARCHAR" property="mauthor"/>
+    <result column="mprice" jdbcType="DOUBLE" property="mprice"/>
+    <result column="mactor" jdbcType="VARCHAR" property="mactor"/>
+    <result column="mdate" jdbcType="DATE" property="mdate" javaType="java.sql.Date"/>
+    <result column="mstate" jdbcType="VARCHAR" property="mstate"/>
+    <collection property="movieHalls" ofType="com.dlszy.entity.MovieHall">
+        <id column="hid" jdbcType="INTEGER" property="hid" />
+		<result column="hname" jdbcType="VARCHAR" property="hname" />
+		<result column="hnum" jdbcType="INTEGER" property="hnum" />
+		<result column="hstate" jdbcType="VARCHAR" property="hstate" />
+    </collection>
+  </resultMap>
+  <select id="count" resultType="INTEGER" parameterType="STRING">
+       select count(mid) from t_movie
+       <where>
+          <if test="_parameter!=null and !&quot;&quot;.equals(_parameter)">
+               and mactor like '%' #{_parameter} '%'
+          </if>
+       </where>
+  </select>
+  <select id="findMovieListByPage" parameterType="java.lang.reflect.Array" resultType="com.dlszy.entity.Movie">
+       select mid,mname,mpic,mcountry,mauthor,mactor,mprice,mdate,mstate from t_movie
+        <where>
+          <if test="_parameter!=null and !&quot;&quot;.equals(_parameter)">
+               and mactor like '%' #{array[2]} '%'
+          </if>
+       </where>
+      order by mdate desc limit #{array[0]},#{array[1]}
+  </select>
+  
+  <select id="findAll" resultMap="MovieResult">
+    select mid,mname,mpic,mcountry,mauthor,mactor,mprice,mdate,mstate from t_movie
+  </select>
+  <select id="findbyid" resultMap="MovieResult" parameterType="INTEGER">
+  	select mid,mname,mpic,mcountry,mauthor,mactor,mprice,mdate,mstate from t_movie where mid=#{_parameter}
+  </select>
+  <update id="doDel" parameterType="INTEGER">
+  	update t_movie set mstate=0 where mid=#{_parameter}
+  </update>
+  <insert id="doAdd" parameterType="com.dlszy.entity.Movie">
+  	insert into t_movie (mname,mcountry,mpic,mauthor,mactor,mprice,mdate,mstate) 
+  	values (#{mname},#{mcountry},#{mpic},#{mauthor},#{mactor},#{mprice},#{mdate},#{mstate})
+  </insert>
+  <update id="doUpdate" parameterType="com.dlszy.entity.Movie">
+  	update t_movie set  mname=#{mname},mpic=#{mpic},mcountry=#{mcountry},mauthor=#{mauthor},
+  	mactor=#{mactor},mprice=#{mprice},mdate=#{mdate},mstate=#{mstate}
+  	where mid=#{mid}
+  </update>
+  <select id="findAllList" resultMap="MovieResult">
+    select m.mname,mh.hname from t_movie m,t_moviehall mh,t_moviehall_movie mmh
+    where mmh.mid=m.mid and mmh.hid=mh.hid
+  </select>
+  <select id="findAllMovies" resultMap="MovieResult">
+  	select * from t_movie
+  </select>
+  <select id="findByName" resultMap="MovieResult">
+  	select * from t_movie where mname=#{_parameter}
+  </select>
+</mapper>

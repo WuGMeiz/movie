@@ -1,0 +1,33 @@
+#a{
+	width: 100px;
+	height: 20px;
+	text-align: center;
+	margin-top:-95px;
+	margin-left:500px;
+	position: absolute;
+}
+#ar{
+	position: relative;
+}
+#b{
+	width: 100px;
+	height: 20px;
+	text-align: center;
+	position: absolute;
+	margin-top:-295px;
+	margin-left:500px;
+}
+#br{
+	position: relative;
+}
+#c{
+	width: 120px;
+	height: 20px;
+	text-align: center;
+	position: absolute;
+	margin-top:-95px;
+	margin-left:500px;
+}
+#cr{
+	position: relative;
+}

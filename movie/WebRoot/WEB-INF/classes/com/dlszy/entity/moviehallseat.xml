@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MovieHallSeat">
+
+	<resultMap type="com.dlszy.entity.MovieHallSeat" id="MovieHallSeatResult">
+		<id column="h_s_id" jdbcType="INTEGER" property="h_s_id" />
+		<result column="h_s_state" jdbcType="VARCHAR" property="h_s_state" />
+		<association property="seat" javaType="com.dlszy.entity.Seat">
+			<id column="sid" jdbcType="INTEGER" property="sid" />
+			<result column="sline" jdbcType="INTEGER" property="sline" />
+			<result column="srow" jdbcType="INTEGER" property="srow" />
+			<result column="sstate" jdbcType="VARCHAR" property="sstate" />
+		</association>
+		<association property="movieHall" javaType="com.dlszy.entity.MovieHall">
+			<id column="hid" jdbcType="INTEGER" property="hid" />
+			<result column="hname" jdbcType="VARCHAR" property="hname" />
+			<result column="hnum" jdbcType="INTEGER" property="hnum" />
+			<result column="hstate" jdbcType="VARCHAR" property="hstate" />
+		</association>
+		<association property="time2" javaType="com.dlszy.entity.Time2">
+		   <id column="tid2" jdbcType="INTEGER" property="tid2"/>
+          <result column="timespace2" jdbcType="VARCHAR" property="timespace2"/>
+		</association>
+	</resultMap>
+   <select id="findseat" resultType="Integer" parameterType="java.lang.reflect.Array">
+		select count(h_s_id) from t_moviehall_seat where hid=#{array[0]} and tid2=#{array[1]} and h_s_state="1";
+	</select>
+	<select id="findseatvip" resultType="Integer" parameterType="java.lang.reflect.Array">
+		select count(h_s_id) from t_moviehall_seat where hid=#{array[0]} and tid2=#{array[1]} and h_s_state="2";
+	</select>
+	<update id="updateState">
+		update t_moviehall_seat set h_s_state=0;
+	</update>
+	
+	<update id="updateState2">
+		update t_moviehall_seat set h_s_state=#{array[1]} where h_s_id=#{array[0]};
+	</update>
+	<select id="findAllSeat" resultMap="MovieHallSeatResult">
+		select * from t_moviehall_seat;
+	</select>
+</mapper>

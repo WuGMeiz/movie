@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Time2">
+
+  <resultMap type="com.dlszy.entity.Time2" id="Time2Result">
+    <id column="tid2" jdbcType="INTEGER" property="tid2"/>
+    <result column="timespace2" jdbcType="VARCHAR" property="timespace2"/>
+  </resultMap>
+</mapper>

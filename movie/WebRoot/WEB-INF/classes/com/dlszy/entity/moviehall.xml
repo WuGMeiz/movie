@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MovieHall">
+	<resultMap type="com.dlszy.entity.MovieHall" id="MovieHallResult">
+		<id column="hid" jdbcType="INTEGER" property="hid" />
+		<result column="hname" jdbcType="VARCHAR" property="hname" />
+		<result column="hnum" jdbcType="INTEGER" property="hnum" />
+		<result column="hstate" jdbcType="VARCHAR" property="hstate" />
+		<collection property="seats" ofType="com.dlszy.entity.Seat">
+			<id column="sid" jdbcType="INTEGER" property="sid" />
+			<result column="sline" jdbcType="INTEGER" property="sline" />
+			<result column="srow" jdbcType="INTEGER" property="srow" />
+			<result column="sstate" jdbcType="VARCHAR" property="sstate" />
+		</collection>
+	</resultMap>
+		<!-- 查询全部 -->
+	<select id="findAll" resultMap="MovieHallResult">
+		select hid,hname,hnum,hstate from t_moviehall;
+	</select>
+	<select id="count" resultType="INTEGER" parameterType="STRING">
+       SELECT COUNT(hid) from t_moviehall;
+  </select>
+  <select id="movieHallListByPage" parameterType="java.lang.reflect.Array" resultType="com.dlszy.entity.MovieHall">
+       select hid,hname,hnum,hstate from t_moviehall limit #{array[0]},#{array[1]};
+  </select>
+	<!-- 查询单个 -->
+	<select id="findById" resultMap="MovieHallResult" parameterType="INTEGER">
+		select hid,hname,hnum,hstate from t_moviehall where hid=#{_parameter};
+	</select>
+	<!-- 添加影厅 -->
+	<insert id="doAdd" parameterType="com.dlszy.entity.MovieHall">
+		insert into t_moviehall(hname,hnum,hstate) values(#{hname},#{hnum},#{hstate});
+	</insert>
+	<!-- 删除影厅 -->
+	<delete id="doDelete" parameterType="INTEGER">
+		delete from t_moviehall where hid=#{_parameter};
+	</delete>
+	<!-- 修改影厅 -->
+	<update id="doUpdate" parameterType="com.dlszy.entity.MovieHall">
+		update t_moviehall set hname=#{hname},hnum=#{hnum},hstate=#{hstate} where hid=#{hid};
+	</update>
+	<select id="findAllMovieHall" resultMap="MovieHallResult">
+		select h.hid,h.hname,h.hnum,h.hstate from t_moviehall h
+	</select>
+	<select id="findByName" resultMap="MovieHallResult">
+		select * from t_moviehall where hname=#{_parameter}
+	</select>
+</mapper>

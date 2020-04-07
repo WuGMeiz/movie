@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="User">
+  <resultMap type="com.dlszy.entity.User" id="userResult">
+    <id column="uid" jdbcType="INTEGER" property="uid"/>
+    <result column="uname" jdbcType="VARCHAR" property="uname"/>
+    <result column="upsw" jdbcType="VARCHAR" property="upsw"/>
+    <result column="realName" jdbcType="VARCHAR" property="realName"/>
+    <result column="sex" jdbcType="VARCHAR" property="sex"/>
+    <result column="tel" jdbcType="VARCHAR" property="tel"/>
+    <result column="email" jdbcType="VARCHAR" property="email"/>
+    <association property="role" javaType="com.dlszy.entity.Role">
+     <id column="rid" jdbcType="INTEGER" property="rid"/>
+     <result column="rname" jdbcType="VARCHAR" property="rname"/>
+    </association>
+  </resultMap>
+  <select id="findUnameAndUpsw" resultMap="userResult" parameterType="java.lang.reflect.Array">
+     select u.uid,u.uname,u.upsw,u.realName,u.sex,u.tel,u.email,r.rid,r.rname from t_user u,t_role r
+     where u.rid=r.rid and u.uname=#{array[0]} and u.upsw=#{array[1]}
+  </select>
+  <select id="count" resultType="INTEGER" parameterType="STRING">
+       select count(uid) from t_user 
+       <where>
+          <if test="_parameter!=null and !&quot;&quot;.equals(_parameter)">
+               and realname like '%' #{_parameter} '%'
+          </if>
+          and rid=2 
+       </where>
+  </select>
+  <select id="findUserListByPage" parameterType="java.lang.reflect.Array" resultType="com.dlszy.entity.User">
+       select uid,uname,realname,sex,tel,email from t_user
+        <where>
+          <if test="_parameter!=null and !&quot;&quot;.equals(_parameter)">
+               and realname like '%' #{array[2]} '%'
+          </if>
+          and rid=2
+       </where>
+       limit #{array[0]},#{array[1]}
+  </select>
+  <select id="findAll" resultMap="userResult">
+     select uid,uname,realname,sex,tel,email from t_user where rid=2
+  </select>
+  <select id="findbyid" resultMap="userResult" parameterType="INTEGER">
+  	select uid,upsw,uname,realname,sex,tel,email from t_user where rid=2 and uid=#{_parameter}
+  </select>
+  <update id="doDel" parameterType="INTEGER">
+  	delete from t_user where uid=#{_parameter}
+  </update>
+  <insert id="doAdd" parameterType="com.dlszy.entity.User">
+  	insert into t_user (uname,upsw,realname,sex,tel,email,rid) 
+  	values (#{uname},#{upsw},#{realName},#{sex},#{tel},#{email},2)
+  </insert>
+  <update id="doUpdate" parameterType="com.dlszy.entity.User">
+  	update t_user set  uname=#{uname},upsw=#{upsw},realname=#{realName},sex=#{sex},
+  	tel=#{tel},email=#{email}
+  	where uid=#{uid}
+  </update>
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	<!--开启注解-->
+	<context:component-scan base-package="com.dlszy">
+		<!--此配置意思是不扫描使用@Controller注解的类-->
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	<!--加载资源文件XXX.properties-->
+	<context:property-placeholder location="classpath:db.properties"/>
+	<!--配置数据源-->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.DriverManagerDataSource">
+			<property name="driverClass" value="${db_driver}"></property>
+			<property name="jdbcUrl" value="${db_url}"></property>
+			<property name="user" value="${db_user}"></property>
+			<property name="password" value="${db_psw}"></property>
+	</bean>
+	<!--初始化SqlSessionFactory对象-->
+	<bean id="sqlsessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation" value="classpath:Configuration.xml"></property>
+	</bean>
+	<!--配置事物管理器-->
+	<!--事务管理器-->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!--定义通知-->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="do*" propagation="REQUIRED"/>
+			<tx:method name="find*" propagation="REQUIRED" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	<!--定义切面-->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.dlszy.service.impl.*.*(..))" id="pointcut"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>
+	</aop:config>
+</beans>

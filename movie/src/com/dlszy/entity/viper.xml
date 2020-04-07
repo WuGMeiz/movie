@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Viper">
+  <resultMap type="com.dlszy.entity.Viper" id="ViperResult">
+    <id column="vid" jdbcType="INTEGER" property="vid"/>
+    <result column="vname" jdbcType="VARCHAR" property="vname"/>
+    <result column="vtel" jdbcType="VARCHAR" property="vtel"/>
+    <result column="vcard" jdbcType="VARCHAR" property="vcard"/>
+    <result column="vstate" jdbcType="VARCHAR" property="vstate"/>
+  </resultMap>
+  <select id="findAllVip" resultMap="ViperResult" parameterType="java.lang.reflect.Array">
+  		select * from t_vip
+       <where>
+          <if test="_parameter!=null and !&quot;&quot;.equals(_parameter)">
+               and vname like '%' #{array[2]} '%'
+          </if>
+       </where>
+  		 		limit #{array[0]},#{array[1]};
+  </select>
+  <select id="findcount" parameterType="String" resultType="Integer">
+  		select count(*) from t_vip
+       <where>
+          <if test="_parameter!=null and !&quot;&quot;.equals(_parameter)">
+               and vname like '%' #{_parameter} '%'
+          </if>
+       </where>
+  		
+  </select>
+  <insert id="addViper" parameterType="com.dlszy.entity.Viper">
+  		insert into t_vip(vname,vtel,vcard,vstate) values(#{vname},#{vtel},#{vcard},#{vstate});
+  </insert>
+  <update id="updateViper" parameterType="com.dlszy.entity.Viper">
+  		update t_vip set vname=#{vname},vtel=#{vtel},vcard=#{vcard},vstate=#{vstate} where vid=#{vid};
+  </update>
+  <update id="delViper" parameterType="String">
+  		update t_vip set vstate="已过期" where vid=#{vid};
+  </update>
+  <select id="findByVid" parameterType="int" resultMap="ViperResult">
+  		select * from t_vip where vid=#{_parameter};
+  </select>
+</mapper>
